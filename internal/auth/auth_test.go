@@ -8,8 +8,7 @@ import (
 )
 
 func TestAuthGetAPIKey(t *testing.T) {
-	// mockup := make(http.Header)
-	var mockup http.Header
+	mockup := make(http.Header)
 	mockup.Add("Authorization", "ApiKey guest")
 	test, err := GetAPIKey(mockup)
 	fmt.Printf("Test = %s", test)

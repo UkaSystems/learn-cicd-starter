@@ -97,7 +97,7 @@ func main() {
 	}
 
 	cleanLog := strings.ReplaceAll(port, "\n", "")
-	cleanLog = strings.ReplaceAll(cleanLog, "\r", "")
+	cleanLog = strings.ReplaceAll(port, "\r", "")
 	log.Printf("Serving on port: %s\n", cleanLog)
 	log.Fatal(srv.ListenAndServe())
 }

@@ -8,7 +8,10 @@ jobs:
   deploy:
     name: Deploy
     runs-on: ubuntu-latest
-
+    
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+    
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -17,6 +20,9 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version: "1.26.0"
+
+      - name: Install Goose
+        run: go install github.com/pressly/goose/v3/cmd/goose@latest
 
       - name: Build prod
         run: ./scripts/buildprod.sh
@@ -32,5 +38,10 @@ jobs:
       - name: 'Use gcloud CLI'
         run: gcloud builds submit --tag us-central1-docker.pkg.dev/auspicious-life-490523-q9/notely-ar-repo/notely:latest
 
+      - name: Run migrations
+        run: ./scripts/migrateup.sh
+
       - name: Deploy to Cloud Run
         run: gcloud run deploy notely --image us-central1-docker.pkg.dev/auspicious-life-490523-q9/notely-ar-repo/notely:latest --region us-central1 --allow-unauthenticated --project auspicious-life-490523-q9 --max-instances=4
+
+      
